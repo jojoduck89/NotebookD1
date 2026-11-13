@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<title>สมุด</title>
+<title>สมุดของพ่อ</title>
 <style>
 :root{--bg:#f4f1ea;--fg:#222;--bar:#fff;--btn:#e9e5da;--ac:#2a6fdb;--acf:#fff;--ln:#cfd8e3;--pp:#fff;
 box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
@@ -42,20 +42,22 @@ input{flex:1;font-size:20px;padding:12px 14px;border-radius:12px;border:2px soli
 .dot.on{border-color:var(--ac);box-shadow:0 0 0 2px var(--bar) inset}
 .sub{background:var(--btn);font-size:18px}
 .sub .n{min-width:28px;text-align:center;font-weight:700;font-size:22px}
-#scroll{flex:1;overflow:auto;-webkit-overflow-scrolling:touch;background:var(--bg);text-align:center}
+#scroll{flex:1;overflow:auto;-webkit-overflow-scrolling:touch;background:var(--bg);text-align:center;padding-top:32px;box-sizing:border-box}
 #sheet{margin:0;text-align:left;touch-action:manipulation;position:relative}
 #zw{margin:0 auto}
 #cm2{position:absolute;pointer-events:none;z-index:5;border:3px solid #2aa6ff;background:#2aa6ff18;box-shadow:0 0 8px #2aa6ff;box-sizing:border-box;animation:bl 1s steps(2,start) infinite}
-#main{flex:1;display:flex;min-height:0}
-#np{flex:0 0 33.333%;overflow-y:auto;padding:12px;box-sizing:border-box;background:var(--bar);border-right:1px solid var(--btn)}
+#main{flex:1;display:flex;min-height:0;gap:10px}
+#np{flex:0 0 31%;overflow-y:auto;padding:12px;box-sizing:border-box;background:var(--bar);border-right:1px solid var(--btn)}
 .npc{display:flex;gap:10px;margin-bottom:12px}
 .cb{flex:1;height:52px;border-radius:12px;border:4px solid transparent;cursor:pointer;padding:0}
 .cb.on{border-color:var(--ac);box-shadow:0 0 0 3px var(--bar) inset}
 #nps{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:12px}
 .sk{height:56px;border:0;border-radius:12px;color:#fff;font-size:16px;font-weight:600;cursor:pointer;padding:0}
 #npp{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
-.tile{background:#fff;color:#111;border:0;border-radius:14px;min-height:84px;font-size:14px;line-height:1.3;font-weight:700;font-family:ui-monospace,Menlo,monospace;letter-spacing:2px;padding:10px 4px;cursor:pointer}
+.tile{background:#fff;color:#111;border:0;border-radius:14px;min-height:84px;font-size:14px;line-height:1.3;font-weight:700;font-family:ui-monospace,Menlo,monospace;letter-spacing:2px;white-space:pre-line;padding:10px 4px;cursor:pointer}
 .tile:active{transform:scale(.97)}
+.tile .repeat-label{display:block;margin:-2px 0 7px;font:700 15px -apple-system,sans-serif;letter-spacing:0;color:#2a6fdb}
+#clr{position:fixed;right:14px;top:50%;transform:translateY(-50%);z-index:20;width:96px;min-height:54px;padding:8px 10px;font-size:14px;white-space:normal;line-height:1.25}
 @media (max-width:900px){#npp{grid-template-columns:1fr}}
 .npc{gap:18px;padding:6px}
 .cb{flex:none;width:68px;height:68px;border:0;color:#fff;font-size:26px;font-weight:700}
@@ -84,7 +86,7 @@ input{flex:1;font-size:20px;padding:12px 14px;border-radius:12px;border:2px soli
 </head>
 <body>
 <div id="home" class="screen">
-  <h1>📒 Notebooks</h1>
+  <h1>📒 สมุดของพ่อ</h1>
   <div class="new"><input id="nn" placeholder="ชื่อสมุดใหม่"><button class="b pri" id="add">＋ สร้างสมุด</button></div>
   <div class="new" style="margin-top:0;flex-wrap:wrap"><button class="b" id="bk">💾 สำรองทุกสมุดเป็นไฟล์</button><button class="b" id="rs">📥 กู้คืนจากไฟล์</button><input type="file" id="rf" accept=".json,application/json" class="hide"><span id="bkt" style="align-self:center;opacity:.7"></span></div>
   <div id="list"></div>
@@ -96,6 +98,7 @@ input{flex:1;font-size:20px;padding:12px 14px;border-radius:12px;border:2px soli
     
     <button class="b" data-t="pen">✏️ ปากกา</button>
     <button class="b" data-t="link">🔗 ปากกาโยง</button>
+    <button class="b" data-t="link2">🔗 ปากกาโยง 2</button>
     <button class="b" id="lkb" disabled>✂ ตัดเส้น</button>
     <button class="b" data-t="eraser">🧽 ลบปากกา</button>
     <button class="b" data-t="rowx">🔢 ลบเลขทั้งบรรทัด</button>
@@ -115,7 +118,7 @@ input{flex:1;font-size:20px;padding:12px 14px;border-radius:12px;border:2px soli
     
     
     <span class="sp"></span>
-    <button class="b" id="clr">🗑 ลบทั้งหน้า</button>
+    
     <button class="b" id="undo">↶ ย้อน</button>
     <button class="b pri" id="save">💾 บันทึก</button>
   </div>
@@ -142,11 +145,12 @@ input{flex:1;font-size:20px;padding:12px 14px;border-radius:12px;border:2px soli
     <span>เริ่มที่</span><button class="b" id="stm2">−</button><span class="n" id="stv2"></span><button class="b" id="stp2">+</button>
   </div>
   <div id="main"><div id="np" class="hide"><div class="npc"><button class="cb on" style="background:#1a1a1a">1</button><button class="cb" style="background:#f28c00">2</button><button class="cb" style="background:#d62828">7</button></div><div id="nps"></div><div id="npp"></div></div><div id="scroll"><div id="zw"><div id="sheet"></div></div><button class="b" id="more">＋ เพิ่มกระดาษ</button></div></div>
+  <button class="b danger" id="clr">🗑 ลบหน้านี้</button>
 </div>
 <div id="dlg" class="hide"><div class="box"><h2 id="dt"></h2><div id="db"></div><div class="row"><button class="b" id="dno">ยกเลิก</button><button class="b pri" id="dyes"></button></div></div></div>
 <div id="toast"></div>
 <script>
-const CELL=64,COLS=12,W=CELL*COLS,CH=1920,D=2,SZ=[2,4,8],SN=['เส้นบาง','เส้นกลาง','เส้นหนา'];
+const CELL=64,COLS=12,W=CELL*COLS,CH=1920,ROW7=76,D=2,SZ=[2,4,8],SN=['เส้นบาง','เส้นกลาง','เส้นหนา'];
 const $=s=>document.querySelector(s);
 const ld=(k,d)=>{try{const v=JSON.parse(localStorage.getItem(k));return v==null?d:v}catch(e){return d}};
 const sv=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v));return true}catch(e){toast('บันทึกไม่ได้ พื้นที่เต็ม');return false}};
@@ -198,27 +202,47 @@ function build(){
   }
   redraw();showCur();setZoom(zm);
 }
+function ellipseLink(ctx,x1,y1,rx1,ry1,x2,y2,rx2,ry2){
+  const dx=x2-x1,dy=y2-y1;if(Math.abs(dx)+Math.abs(dy)<1)return;
+  const a=1/Math.sqrt((dx*dx)/(rx1*rx1)+(dy*dy)/(ry1*ry1));
+  const b=1/Math.sqrt((dx*dx)/(rx2*rx2)+(dy*dy)/(ry2*ry2));
+  ctx.beginPath();ctx.moveTo(x1+dx*a,y1+dy*a);ctx.lineTo(x2-dx*b,y2-dy*b);ctx.stroke();
+}
 function drawItem(k,s){
   const y0=k.y;
   if(s.t==='clr'){[k.x,k.nx].forEach(x=>{x.setTransform(1,0,0,1,0,0);x.clearRect(0,0,k.c.width,k.c.height)});return}
+  if(s.t==='pgclr'){if(Math.floor(y0/CH)===s.page){[k.x,k.nx].forEach(x=>{x.setTransform(D,0,0,D,0,-y0*D);x.clearRect(0,0,W,CH)})}return}
+  if(s.t==='n7'){
+    const ctx=k.x;ctx.setTransform(D,0,0,D,0,-y0*D);ctx.globalCompositeOperation='source-over';
+    const x=OFF*CELL,y=s.y,w=10*CELL,h=7*ROW7;ctx.fillStyle='#fff';ctx.fillRect(x,y,w,h);
+    ctx.strokeStyle='#cfd8e3';ctx.lineWidth=1;ctx.beginPath();
+    for(let i=0;i<=10;i++){const xx=x+i*CELL;ctx.moveTo(xx,y);ctx.lineTo(xx,y+h)}
+    for(let j=0;j<=7;j++){const yy=y+j*ROW7;ctx.moveTo(x,yy);ctx.lineTo(x+w,yy)}ctx.stroke();
+    ctx.fillStyle=s.c;ctx.font='700 50px -apple-system,sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';
+    for(let j=0;j<7;j++)for(let i=0;i<10;i++)ctx.fillText(String(s.values[i]),x+i*CELL+CELL/2,y+j*ROW7+ROW7/2+1);
+    return;
+  }
   if(s.t==='n'||s.t==='x'){
     const ctx=k.nx;ctx.setTransform(D,0,0,D,0,-y0*D);
     if(s.t==='x'){ctx.clearRect(0,s.row*CELL,W,CELL);return}
-    ctx.fillStyle=s.c;ctx.font='700 40px -apple-system,sans-serif';
+    ctx.fillStyle=s.c;ctx.font='700 50px -apple-system,sans-serif';
     ctx.textAlign='center';ctx.textBaseline='middle';
-    s.cells.forEach(c=>{ctx.clearRect(c[0]*CELL,c[1]*CELL,CELL,CELL);ctx.fillText(String(c[2]),c[0]*CELL+CELL/2,c[1]*CELL+CELL/2+1)});
+    s.cells.forEach(c=>{const yy=c[3]??c[1]*CELL;ctx.clearRect(c[0]*CELL,yy,CELL,CELL);ctx.fillText(String(c[2]),c[0]*CELL+CELL/2,yy+CELL/2+1)});
     return;
   }
   if(s.t==='kb')return;
+  if(s.t==='k2'){
+    const ctx=k.x;ctx.setTransform(D,0,0,D,0,-y0*D);ctx.globalCompositeOperation='source-over';ctx.strokeStyle=s.c;ctx.lineWidth=s.w;ctx.lineCap='round';ctx.lineJoin='round';
+    const legacy=s.gap!=null&&!s.ry, cx=s.x, cy=legacy?s.y+s.gap/2:(s.cy??s.y), rx=s.rx??s.r??27, ry=s.ry??(legacy?s.gap/2+4:64);
+    if(s.px!=null)ellipseLink(ctx,s.px,s.py,s.prx??rx,s.pry??ry,cx,cy,rx,ry);
+    ctx.beginPath();ctx.ellipse(cx,cy,rx,ry,0,0,Math.PI*2);ctx.stroke();return;
+  }
   const ctx=k.x;ctx.setTransform(D,0,0,D,0,-y0*D);
   if(s.t==='k'){
     ctx.globalCompositeOperation='source-over';ctx.strokeStyle=s.c;ctx.lineWidth=s.w;ctx.lineCap='round';ctx.lineJoin='round';
-    if(s.px!=null){
-      const dx=s.x-s.px,dy=s.y-s.py,L=Math.hypot(dx,dy)||1,ux=dx/L,uy=dy/L;
-      if(L>2*s.r){ctx.beginPath();ctx.moveTo(s.px+ux*s.r,s.py+uy*s.r);ctx.lineTo(s.x-ux*s.r,s.y-uy*s.r);ctx.stroke()}
-    }
-    ctx.beginPath();ctx.ellipse(s.x,s.y,s.r-2,s.r+2,0,0,Math.PI*2);ctx.stroke();
-    return;
+    const rx=s.rx??s.r??27,ry=s.ry??s.r??27;
+    if(s.px!=null)ellipseLink(ctx,s.px,s.py,s.prx??rx,s.pry??ry,s.x,s.y,rx,ry);
+    ctx.beginPath();ctx.ellipse(s.x,s.y,rx,ry,0,0,Math.PI*2);ctx.stroke();return;
   }
   const p=s.pts;
   ctx.globalCompositeOperation=s.t==='e'?'destination-out':'source-over';
@@ -241,14 +265,34 @@ function save(now){
   tm=setTimeout(go,400);
 }
 const sheet=$('#sheet');
+function cellAt(p){
+  let zone=null;const page=Math.floor(p[1]/CH);
+  for(const s of cur.strokes){if(s.t==='pgclr'&&s.page===page)zone=null;else if(s.t==='n7'&&p[0]>=OFF*CELL&&p[0]<OFF*CELL+10*CELL&&p[1]>=s.y&&p[1]<s.y+7*ROW7)zone=s}
+  if(zone){const col=Math.floor((p[0]-OFF*CELL)/CELL),row=Math.floor((p[1]-zone.y)/ROW7),top=zone.y+row*ROW7;return{col:OFF+col,row,top,height:ROW7,zone}}
+  const col=Math.floor(p[0]/CELL),row=Math.floor(p[1]/CELL);return{col,row,top:row*CELL,height:CELL,zone:null};
+}
+function hasNumberAt(p){
+  const hit=cellAt(p),page=Math.floor(p[1]/CH);let present=false;
+  for(const s of cur.strokes){
+    if(s.t==='clr'||(s.t==='pgclr'&&s.page===page)){present=false;continue}
+    if(s.t==='x'&&hit.row===s.row){present=false;continue}
+    if(s.t==='n7'&&hit.zone===s&&hit.col>=OFF&&hit.col<OFF+10){present=true;continue}
+    if(s.t==='n')for(const c of s.cells){const y=c[3]??c[1]*CELL;if(hit.col===c[0]&&p[1]>=y&&p[1]<y+CELL){present=true;break}}
+  }
+  return present;
+}
 const pt=e=>{const r=sheet.getBoundingClientRect();return [Math.round((e.clientX-r.left)/zm*10)/10,Math.round((e.clientY-r.top)/zm*10)/10]};
 gate();
 sheet.addEventListener('pointerdown',e=>{
   if(tool==='hand')return;
   const p=pt(e);
-  if(tool==='num'||tool==='rep'){const n=Date.now();if(tap&&n-tap.t<450&&Math.hypot(p[0]-tap.p[0],p[1]-tap.p[1])<40){tap=null}else{tap={t:n,p};return}}
+  if(tool==='num'||tool==='rep'){
+    if(tool==='num'&&hasNumberAt(p)){e.preventDefault();linkAt(p);tap=null;return}
+    const n=Date.now();if(tap&&n-tap.t<450&&Math.hypot(p[0]-tap.p[0],p[1]-tap.p[1])<40){tap=null}else{tap={t:n,p};return}
+  }
   e.preventDefault();
   if(tool==='link'){linkAt(p);return}
+  if(tool==='link2'){linkPairAt(p);return}
   if(tool==='rowx'){const row=Math.floor(p[1]/CELL);const it={t:'x',row};cur.strokes.push(it);drawAll(it);save();return}
   if(tool==='num'||tool==='rep'){
     const col=Math.floor(p[0]/CELL),row=Math.floor(p[1]/CELL),cells=[];
@@ -294,7 +338,7 @@ $('#lp').onclick=()=>{if(tool==='rep')rl=Math.min(30,rl+1);else lines=Math.min(3
 $('#stm').onclick=()=>{st=st<=1?10:st-1;nums()};
 $('#stp').onclick=()=>{st=st>=10?1:st+1;nums()};
 $('#gp').onclick=()=>{gap=gap?0:1;nums()};
-$('#undo').onclick=()=>{if(cur.strokes.length){const s=cur.strokes.pop();redraw();rebuildLk();if(s.t==='n'){cr=s.cells[0][1];showCur()}save()}};
+$('#undo').onclick=()=>{if(cur.strokes.length){const s=cur.strokes.pop();redraw();rebuildLk();if(s.t==='n'){cr=s.cells[0][1];showCur()}else if(s.t==='n7'){cr=Math.round(s.y/CELL);showCur()}save()}};
 $('#save').onclick=()=>{if(save(true))toast('บันทึกแล้ว ✓')};
 $('#back').onclick=()=>{save(true);cur=null;home()};
 $('#more').onclick=()=>{cur.chunks++;build();save();toast('เพิ่มกระดาษแล้ว')};
@@ -333,7 +377,8 @@ const OFF=1;let cr=0;
 function showCur(){
   if(!cur)return;
   let m=$('#cm2');if(!m){m=document.createElement('div');m.id='cm2';$('#sheet').append(m)}
-  m.style.cssText='display:'+(tool==='num'?'block':'none')+';left:'+OFF*CELL+'px;top:'+cr*CELL+'px;width:'+10*CELL+'px;height:'+CELL+'px';
+  const h=mi===2?7*ROW7:CELL;
+  m.style.cssText='display:'+(tool==='num'?'block':'none')+';left:'+OFF*CELL+'px;top:'+cr*CELL+'px;width:'+10*CELL+'px;height:'+h+'px';
 }
 function upd(){$('#stv2').textContent=st%10}
 function pat(k){
@@ -361,9 +406,8 @@ function setZoom(z){
   $('#zv').textContent=Math.round(zm*100)+'%';
 }
 function zoomBy(d){
-  const sc=$('#scroll'),r=sc.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height/2,s=$('#sheet').getBoundingClientRect(),ax=(cx-s.left)/zm,ay=(cy-s.top)/zm;
-  setZoom(zm+d);
-  const n=$('#sheet').getBoundingClientRect();sc.scrollLeft+=n.left+ax*zm-cx;sc.scrollTop+=n.top+ay*zm-cy;
+  const sc=$('#scroll');setZoom(zm+d);
+  requestAnimationFrame(()=>sc.scrollTo({top:0,left:0,behavior:'auto'}));
 }
 $('#zo').onclick=()=>zoomBy(-.25);
 $('#zi').onclick=()=>zoomBy(.25);
@@ -371,30 +415,45 @@ $('#zv').onclick=()=>zoomBy(1-zm);
 $('#lk').onclick=()=>{
   locked=!locked;const b=$('#lk');
   b.textContent=locked?'🔒 ล็อกอยู่':'🔓 ล็อกหน้า';b.classList.toggle('on',locked);
-  $('#scroll').style.overflow=locked?'hidden':'auto';
+  $('#scroll').style.overflow='auto';
   $('#zo').disabled=$('#zi').disabled=$('#zv').disabled=locked;
 };
-let lk={};const PC=['#1a1a1a','#d62828','#1d5fd1','#1e8e3e'];
-function rebuildLk(){lk={};(cur?cur.strokes:[]).forEach(s=>{if(s.t==='k')lk[s.c]={x:s.x,y:s.y};else if(s.t==='kb')lk[s.c]=null;else if(s.t==='clr')lk={}})}
+let lk={},lk2={};const PC=['#1a1a1a','#d62828','#1d5fd1','#1e8e3e'];
+function rebuildLk(){lk={};lk2={};(cur?cur.strokes:[]).forEach(s=>{
+  if(s.t==='k')lk[s.c]={x:s.x,y:s.y,rx:s.rx??s.r??27,ry:s.ry??s.r??27};
+  else if(s.t==='k2'){const legacy=s.gap!=null&&!s.ry;lk2[s.c]={x:s.x,y:legacy?s.y+s.gap/2:(s.cy??s.y),rx:s.rx??s.r??27,ry:s.ry??(legacy?s.gap/2+4:64)}}
+  else if(s.t==='kb')lk[s.c]=null;
+  else if(s.t==='clr'||s.t==='pgclr'){lk={};lk2={}}
+})}
 function linkAt(p){
-  const col=Math.floor(p[0]/CELL),row=Math.floor(p[1]/CELL);
-  if(col<0||col>=COLS||row<0)return;
-  const x=col*CELL+CELL/2,y=row*CELL+CELL/2,pv=lk[color];
-  const it={t:'k',c:color,x,y,r:21+3*Math.max(0,PC.indexOf(color)),w:Math.max(3,SZ[si])};
-  if(pv&&!(pv.x===x&&pv.y===y)){it.px=pv.x;it.py=pv.y}
-  cur.strokes.push(it);drawAll(it);lk[color]={x,y};save();
+  const c=cellAt(p);if(c.col<0||c.col>=COLS||c.row<0)return;
+  const x=c.col*CELL+CELL/2,y=c.top+c.height/2,pv=lk[color],r=27;
+  if(pv&&pv.x===x&&pv.y===y)return;
+  const it={t:'k',c:color,x,y,rx:r,ry:r,r,w:Math.max(3,SZ[si])};
+  if(pv&&!(pv.x===x&&pv.y===y)){it.px=pv.x;it.py=pv.y;it.prx=pv.rx;it.pry=pv.ry}
+  cur.strokes.push(it);drawAll(it);lk[color]={x,y,rx:r,ry:r};save();
+}
+function linkPairAt(p){
+  const c=cellAt(p);if(c.col<0||c.col>=COLS||c.row<0)return;
+  const belowTop=c.top+c.height;
+  if(c.zone&&belowTop>=c.zone.y+7*ROW7){toast('ไม่มีช่องตัวเลขด้านล่างให้วง');return}
+  if(belowTop+ c.height>cur.chunks*CH){toast('ไม่มีช่องตัวเลขด้านล่างให้วง');return}
+  const x=c.col*CELL+CELL/2,cy=c.top+c.height,rX=29,rY=c.height+5,pv=lk2[color];
+  const it={t:'k2',c:color,x,y:cy,cy,rx:rX,ry:rY,w:Math.max(3,SZ[si])};
+  if(pv){it.px=pv.x;it.py=pv.y;it.prx=pv.rx;it.pry=pv.ry}
+  cur.strokes.push(it);drawAll(it);lk2[color]={x,y:cy,rx:rX,ry:rY};save();
 }
 $('#lkb').onclick=()=>{
   if(!lk[color]){toast('สีนี้ยังไม่มีเส้นที่ต่ออยู่');return}
   cur.strokes.push({t:'kb',c:color});lk[color]=null;save();toast('ตัดเส้นแล้ว แตะตัวเลขจะเริ่มวงใหม่');
 };
-$('#clr').onclick=()=>{
-  const L=cur.strokes[cur.strokes.length-1];
-  if(!L||L.t==='clr'){toast('ไม่มีอะไรให้ลบ');return}
-  dlg('ลบทั้งหน้า?','เส้น ตัวเลข และทุกอย่างในสมุดเล่มนี้จะถูกลบ ถ้าลบผิด กด ↶ ย้อน เพื่อเอากลับมาได้ทันที','ใช่ ลบทั้งหน้า',()=>{
-    const it={t:'clr'};cur.strokes.push(it);drawAll(it);lk={};cr=0;showCur();save();toast('ลบทั้งหน้าแล้ว กด ↶ ย้อน เพื่อเอากลับ');
-  },true);
-};
+function deleteCurrentPage(){
+  const sc=$('#scroll'),page=Math.max(0,Math.min(cur.chunks-1,Math.floor(Math.max(0,sc.scrollTop-32)/(CH*zm))));
+  const it={t:'pgclr',page};cur.strokes.push(it);drawAll(it);
+  lk={};lk2={};if(Math.floor(cr/30)===page)cr=page*30;showCur();save();toast('ลบหน้านี้แล้ว กด ↶ ย้อน เพื่อกู้คืน');
+}
+$('#clr').onclick=deleteCurrentPage;
+
 function gate(){
   const pts=new Map();let drawId=null,multi=false,pz=null;
   const mid=()=>{const a=[...pts.values()];return{x:(a[0].x+a[1].x)/2,y:(a[0].y+a[1].y)/2,d:Math.hypot(a[0].x-a[1].x,a[0].y-a[1].y)||1}};
@@ -456,15 +515,21 @@ function buildNp(){
   document.querySelectorAll('.cb').forEach((b,i)=>b.classList.toggle('on',i===mi));
   const sk=$('#nps');sk.innerHTML='';
   [['▲ ย้อนบรรทัด',-1],['เว้นบรรทัด ▼',1]].forEach(([t,n])=>{const b=document.createElement('button');b.className='sk';b.style.background=m.u;b.textContent=t;b.onclick=()=>{cr=Math.max(0,cr+n);showCur();save()};sk.append(b)});
-  const pp=$('#npp');pp.innerHTML='';
-  for(let k=1;k<=10;k++){const b=document.createElement('button');b.className='tile';b.innerHTML=rowsFor(k,mi).map(r=>r.join('')).join('<br>');b.onclick=()=>place(k);pp.append(b)}
+  const pp=$('#npp');pp.innerHTML='';showCur();
+  for(let k=1;k<=10;k++){const b=document.createElement('button');b.className='tile';if(mi===2)b.innerHTML='<span class="repeat-label">'+k+' (ซ้ำ)</span><span>'+rowsFor(k,0)[0].join('')+'</span>';else b.textContent=rowsFor(k,mi).map(r=>r.join('')).join('\n');b.onclick=()=>place(k);pp.append(b)}
 }
 function place(k){
-  const rs=rowsFor(k,mi);
-  if((cr+rs.length)*CELL>cur.chunks*CH){toast('หมดกระดาษ กด ＋ เพิ่มกระดาษ');return}
-  const cells=[];rs.forEach((r,j)=>r.forEach((v,i)=>cells.push([OFF+i,cr+j,v])));
-  const it={t:'n',c:MODES[mi].c,cells};cur.strokes.push(it);drawAll(it);
-  cr+=rs.length;showCur();save();
+  const rs=rowsFor(k,mi),startY=cr*CELL;
+  if(mi===2){
+    if(startY+7*ROW7>cur.chunks*CH){toast('หมดกระดาษ กด ＋ เพิ่มกระดาษ');return}
+    const it={t:'n7',c:MODES[mi].c,y:startY,values:rs[0]};cur.strokes.push(it);drawAll(it);
+    cr+=Math.ceil(7*ROW7/CELL);
+  }else{
+    if(startY+rs.length*CELL>cur.chunks*CH){toast('หมดกระดาษ กด ＋ เพิ่มกระดาษ');return}
+    const cells=[];rs.forEach((r,j)=>r.forEach((v,i)=>cells.push([OFF+i,cr+j,v])));
+    const it={t:'n',c:MODES[mi].c,cells};cur.strokes.push(it);drawAll(it);cr+=rs.length;
+  }
+  showCur();save();
   const sc=$('#scroll'),y=cr*CELL*zm;
   if(y<sc.scrollTop||y>sc.scrollTop+sc.clientHeight-CELL*2)sc.scrollTo({top:Math.max(0,y-sc.clientHeight/2)});
 }
